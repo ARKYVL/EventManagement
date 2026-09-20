@@ -14,7 +14,7 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-expand navbar-light bg-white border-bottom sticky-top shadow-sm">
       <div className="container">
-        <Link to="/" className="navbar-brand d-flex items-center gap-2 font-bold text-dark">
+        <Link to="/" className="navbar-brand d-flex align-items-center gap-2 fw-bold text-dark">
           <Ticket className="text-primary" size={20} />
           <span>EventPass</span>
         </Link>
@@ -25,8 +25,8 @@ export default function Navbar() {
           {user ? (
             <>
               <Link to="/dashboard" className="nav-link text-secondary">My Bookings</Link>
-              <span className="border-start h-5 my-auto" />
-              <span className="d-flex align-items-center gap-1 text-dark small font-medium">
+              <span className="border-start" style={{ height: '20px' }} />
+              <span className="d-flex align-items-center gap-1 text-dark small fw-medium">
                 <User size={16} className="text-muted" />
                 {user.name}
               </span>
@@ -39,7 +39,7 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            <Link to="/login" className="btn btn-dark btn-sm px-3 font-medium">
+            <Link to="/login" className="btn btn-dark btn-sm px-3 fw-medium">
               Sign In
             </Link>
           )}

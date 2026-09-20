@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../services/api';
 import { useAuthStore } from '../store/useAuthStore';
 import { Calendar, Tag } from 'lucide-react';
 
-const EventsPage=()=> {
+const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState(null);
   const user = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchEvents();
@@ -26,7 +28,7 @@ const EventsPage=()=> {
 
   const handleBookTicket = async (eventId) => {
     if (!user) {
-      alert('Please log in to book tickets.');
+      navigate('/login');
       return;
     }
     
@@ -53,7 +55,7 @@ const EventsPage=()=> {
       </div>
 
       {status && (
-        <div className={`alert alert-${status.type} alert-dismissible fade show text-sm mb-4`} role="alert">
+        <div className={`alert alert-${status.type} alert-dismissible fade show small mb-4`} role="alert">
           {status.message}
         </div>
       )}
@@ -71,7 +73,7 @@ const EventsPage=()=> {
                     </span>
                   </div>
                   
-                  <div className="text-muted small mb-4 space-y-1">
+                  <div className="text-muted small mb-4 d-grid gap-1">
                     <div className="d-flex align-items-center gap-1">
                       <Calendar size={14} />
                       <span>{new Date(event.event_date).toLocaleDateString()}</span>
@@ -86,7 +88,7 @@ const EventsPage=()=> {
                 <button
                   onClick={() => handleBookTicket(event.id)}
                   disabled={event.available_tickets <= 0}
-                  className="btn btn-dark w-100 btn-sm font-medium"
+                  className="btn btn-dark w-100 btn-sm fw-medium"
                 >
                   {event.available_tickets > 0 ? 'Book Ticket' : 'Sold Out'}
                 </button>

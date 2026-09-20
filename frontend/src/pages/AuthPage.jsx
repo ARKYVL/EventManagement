@@ -3,16 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../services/api';
 import { useAuthStore } from '../store/useAuthStore';
 
-const AuthPage=()=> {
+const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
+
+  const handleToggle = () => {
+    setIsLogin(!isLogin);
+    setFormData({ name: '', email: '', password: '' });
+    setError(null);
+    setSuccess(null);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
     const endpoint = isLogin ? '/auth/login' : '/auth/register';
     try {
@@ -25,8 +34,9 @@ const AuthPage=()=> {
         login(data.user, data.token);
         navigate('/');
       } else {
+        setSuccess('Account created successfully! Please sign in.');
         setIsLogin(true);
-        alert('Account created! Please sign in.');
+        setFormData({ name: '', email: '', password: '' });
       }
     } catch (err) {
       setError(err.message);
@@ -34,7 +44,7 @@ const AuthPage=()=> {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center min-vh-80">
+    <div className="container d-flex justify-content-center align-items-center py-5" style={{ minHeight: '80vh' }}>
       <div className="card border-0 shadow-sm rounded-3 p-4 w-100" style={{ maxWidth: '380px' }}>
         <h4 className="fw-bold text-center mb-1">{isLogin ? 'Sign In' : 'Create Account'}</h4>
         <p className="text-muted small text-center mb-4">
@@ -42,6 +52,7 @@ const AuthPage=()=> {
         </p>
 
         {error && <div className="alert alert-danger py-2 small">{error}</div>}
+        {success && <div className="alert alert-success py-2 small">{success}</div>}
 
         <form onSubmit={handleSubmit}>
           {!isLogin && (
@@ -73,13 +84,14 @@ const AuthPage=()=> {
             <input
               type="password"
               required
+              minLength={6}
               className="form-control form-control-sm"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             />
           </div>
 
-          <button type="submit" className="btn btn-dark btn-sm w-100 font-medium mt-2">
+          <button type="submit" className="btn btn-dark btn-sm w-100 fw-medium mt-2">
             {isLogin ? 'Sign In' : 'Sign Up'}
           </button>
         </form>
@@ -88,7 +100,7 @@ const AuthPage=()=> {
           {isLogin ? "Don't have an account? " : "Already have an account? "}
           <button
             type="button"
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={handleToggle}
             className="btn btn-link text-decoration-none p-0 small fw-bold"
           >
             {isLogin ? 'Sign Up' : 'Sign In'}

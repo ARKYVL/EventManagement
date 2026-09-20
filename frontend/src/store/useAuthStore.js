@@ -1,7 +1,17 @@
 import { create } from 'zustand';
 
+const getSavedUser = () => {
+  try {
+    const raw = localStorage.getItem('user');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    localStorage.removeItem('user');
+    return null;
+  }
+};
+
 export const useAuthStore = create((set) => ({
-  user: JSON.parse(localStorage.getItem('user')) || null,
+  user: getSavedUser(),
   token: localStorage.getItem('token') || null,
 
   login: (userData, authToken) => {
@@ -16,4 +26,3 @@ export const useAuthStore = create((set) => ({
     set({ user: null, token: null });
   },
 }));
-
